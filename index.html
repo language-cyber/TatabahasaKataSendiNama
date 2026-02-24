@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuasai Kata Sendi Nama - Edisi Diraja (DBP)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcfcfc;
+            color: #000000;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .serif-font { font-family: 'Playfair Display', serif; }
+
+        /* --- TIPOGRAFI GAYA NEIL (1.75x) --- */
+        .text-giant-header {
+            font-size: clamp(5.5rem, 18vw, 10.5rem); 
+            line-height: 1;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+        }
+        .text-giant-body {
+            font-size: clamp(2.8rem, 9vw, 5.5rem);
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        /* --- SUSUN ATUR --- */
+        .view-section { display: none; min-height: 100vh; width: 100%; flex-direction: column; align-items: center; justify-content: center; }
+        .view-section.active { display: flex; }
+        .page { display: none; animation: fadeIn 0.4s ease-in-out; width: 100%; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .page.active { display: flex; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- KOMPONEN UI --- */
+        .objective-box {
+            position: fixed; top: 30px; left: 40px; background: #000; color: #fff;
+            padding: 10px 30px; border-radius: 4px; font-size: 1rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.1em; z-index: 100;
+            display: flex; gap: 12px; align-items: center;
+        }
+        .input-flat {
+            border-bottom: 12px solid #e2e8f0; outline: none; padding: 0 15px;
+            text-align: center; font-weight: 800; color: #4f46e5; width: 100%;
+            max-width: 900px; background: transparent; font-size: clamp(2rem, 6vw, 4rem); transition: all 0.3s;
+        }
+        .lego-box {
+            border: 4px solid #000; padding: 20px; background: #fff; box-shadow: 6px 6px 0px #000;
+            font-weight: 800; font-size: 1.5rem; width: 100%; cursor: pointer; transition: 0.2s; text-align: center;
+        }
+        .lego-box.correct { background-color: #dcfce7; border-color: #22c55e; color: #166534; }
+        .lego-box.wrong { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
+
+        /* --- SKROL DIRAJA --- */
+        .royal-scroll {
+            background: #fff9ed;
+            border: 20px solid transparent;
+            border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 L100,0 L100,100 L0,100 Z' fill='none' stroke='%23C5A059' stroke-width='10'/%3E%3Ccircle cx='0' cy='0' r='10' fill='%23C5A059'/%3E%3Ccircle cx='100' cy='0' r='10' fill='%23C5A059'/%3E%3Ccircle cx='100' cy='100' r='10' fill='%23C5A059'/%3E%3Ccircle cx='0' cy='100' r='10' fill='%23C5A059'/%3E%3C/svg%3E") 30 stretch;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            padding: 3rem;
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .scroll-ornament {
+            position: absolute;
+            width: 60px; height: 60px;
+            background: #C5A059;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; border: 4px solid #fff;
+        }
+
+        .mastery-star {
+            width: 45px; height: 45px; border: 3px solid #000; display: flex; align-items: center; justify-content: center;
+            background: #fff; transition: all 0.3s;
+        }
+        .mastery-star.filled { background: #facc15; transform: scale(1.1) rotate(10deg); }
+
+        .nav-bar {
+            width: 85vw; max-width: 1400px; display: flex; justify-content: space-between; align-items: center;
+            padding: 2rem; position: fixed; bottom: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); z-index: 90;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center">
+
+    <div class="h-2 w-full bg-gray-100 fixed top-0 z-[110]">
+        <div id="progressFill" class="h-full bg-black transition-all duration-500" style="width: 0%"></div>
+    </div>
+
+    <!-- 1. HALAMAN UTAMA -->
+    <section id="view-landing" class="view-section active p-6 w-full">
+        <h1 class="text-giant-header mb-12 text-center serif-font italic">Kata<br>Sendi Nama.</h1>
+        <div id="loginForm" class="mb-12 w-full max-w-md flex flex-col items-center">
+            <input type="text" id="studentName" class="input-flat text-2xl mb-8 font-serif" placeholder="Nama Anda (Sila isi)">
+            <div class="flex flex-col md:flex-row gap-8 w-full">
+                <button onclick="startApp('teacher')" class="flex-1 p-8 border-4 border-black hover:bg-black hover:text-white transition group text-center">
+                    <i data-lucide="presentation" class="w-12 h-12 mx-auto mb-4"></i>
+                    <span class="text-2xl font-black uppercase">Mod Guru</span>
+                </button>
+                <button onclick="startApp('student')" class="flex-1 p-8 border-4 border-black hover:bg-black hover:text-white transition group text-center">
+                    <i data-lucide="edit-3" class="w-12 h-12 mx-auto mb-4"></i>
+                    <span class="text-2xl font-black uppercase">Mod Pelajar</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. MOD GURU (MONITOR) -->
+    <section id="view-teacher" class="view-section w-full">
+        <div class="objective-box">🚀 <span>Pantau: Kemajuan Langsung</span></div>
+        <button onclick="jumpToMonitor()" class="fixed top-[100px] left-10 bg-indigo-600 text-white px-6 py-2 rounded-full text-xs font-black shadow-lg z-[101] hover:bg-black transition flex items-center gap-2">
+            <i data-lucide="monitor" class="w-4 h-4"></i> MAKLUM BALAS LANGSUNG
+        </button>
+
+        <div id="teacherContainer" class="w-full flex flex-col items-center px-8">
+            <div class="page active" id="tp1">
+                <h1 class="text-giant-header serif-font italic">Arkib Guru</h1>
+                <p class="text-2xl font-black text-gray-300 animate-pulse uppercase mt-8 tracking-widest text-black">Gunakan kekunci anak panah (->) untuk rujukan slaid</p>
+            </div>
+            
+            <div class="page" id="tp40">
+                <h2 class="text-6xl font-black uppercase mb-8 serif-font">Balai Laporan</h2>
+                <div id="liveGallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl overflow-y-auto max-h-[65vh] p-4">
+                    <p class="text-gray-400 italic text-2xl col-span-full">Menunggu kiriman hasil kerja...</p>
+                </div>
+            </div>
+        </div>
+        <div class="nav-bar">
+            <button onclick="changeTeacherPage(-1)" class="text-black font-black text-2xl uppercase">← Undur</button>
+            <span id="teacherIndicator" class="text-2xl font-black text-slate-300 tracking-[0.4em]">01 / 40</span>
+            <button onclick="changeTeacherPage(1)" class="text-black font-black text-2xl uppercase">Maju →</button>
+        </div>
+    </section>
+
+    <!-- 3. MOD PELAJAR (Latihan) -->
+    <section id="view-student" class="view-section p-8 w-full relative">
+        <div class="objective-box">🎯 <span id="studentPhaseTitle">Fasa 1: Pilihan Kata</span></div>
+        
+        <!-- PINTASAN GURU -->
+        <button onclick="teacherBypass()" class="fixed top-[100px] left-10 bg-yellow-400 text-black px-4 py-2 rounded-full text-[10px] font-black shadow-lg z-[101] border-2 border-black opacity-20 hover:opacity-100 transition-opacity">
+            <i data-lucide="unlock" class="w-3 h-3 inline mr-1"></i> PINTASAN GURU
+        </button>
+
+        <div id="studentContainer" class="w-full max-w-5xl flex flex-col items-center">
+            
+            <!-- FASA 1: MCQ (DIRAWAKKAN) -->
+            <div id="phase1" class="phase-container w-full flex flex-col items-center space-y-12">
+                <h2 class="text-giant-body mb-8 serif-font text-black">Pilih Pasangan Tepat</h2>
+                <div class="w-full space-y-12 overflow-y-auto max-h-[55vh] p-4" id="mcqContainer"></div>
+                <div class="text-xl font-bold text-gray-400 uppercase tracking-widest" id="mcqProgress">Skor: 0 / 10</div>
+                <button id="btnToPhase2" onclick="goToPhase(2)" class="hidden w-full py-8 bg-black text-white text-3xl font-black uppercase shadow-xl">Maju ke Fasa 2 ➡️</button>
+            </div>
+
+            <!-- FASA 2: PEMBINA PUJANGGA -->
+            <div id="phase2" class="hidden phase-container w-full flex flex-col items-center">
+                <div class="flex gap-4 mb-8" id="masteryStars">
+                    <div class="mastery-star" id="star-0"><i data-lucide="star" class="w-6 h-6"></i></div>
+                    <div class="mastery-star" id="star-1"><i data-lucide="star" class="w-6 h-6"></i></div>
+                    <div class="mastery-star" id="star-2"><i data-lucide="star" class="w-6 h-6"></i></div>
+                    <div class="mastery-star" id="star-3"><i data-lucide="star" class="w-6 h-6"></i></div>
+                    <div class="mastery-star" id="star-4"><i data-lucide="star" class="w-6 h-6"></i></div>
+                </div>
+
+                <h2 class="text-giant-body mb-8 serif-font text-black">Pembina Pujangga</h2>
+                <div class="bg-gray-50 p-12 border-4 border-black relative w-full mb-12 shadow-[12px_12px_0px_#000]">
+                    <div class="absolute -top-6 left-10 bg-black text-white px-4 py-2 font-black text-xs uppercase" id="legoScenarioTitle">Misi 1</div>
+                    
+                    <div class="mb-8 text-center">
+                        <p class="text-2xl font-bold text-black" id="legoPrompt">...</p>
+                        <p class="text-lg text-slate-400 italic mt-2" id="legoEnglish">...</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-center gap-6 text-4xl font-bold text-black">
+                        <span id="legoSubject">...</span>
+                        <select id="legoVerb" class="border-b-4 border-black bg-transparent outline-none py-2" onchange="updateLego()">
+                            <option value="">(Tindakan?)</option>
+                        </select>
+                        <select id="legoKsn" class="border-b-4 border-black bg-transparent outline-none py-2" onchange="updateLego()">
+                            <option value="">(Kata Sendi?)</option>
+                        </select>
+                        <span id="legoObject">...</span>
+                    </div>
+
+                    <div id="resultArea" class="hidden mt-12 pt-12 border-t-2 border-gray-200 text-center">
+                        <h3 id="finalSentence" class="text-5xl font-black leading-tight text-black italic">...</h3>
+                        
+                        <!-- Stretch Area -->
+                        <div id="stretchControls">
+                            <p id="legoGoalHint" class="text-sm font-bold text-red-500 uppercase mt-4">Sila tekan 'KEMBANGKAN' untuk peluasan ayat!</p>
+                            <div class="flex gap-4 justify-center mt-8">
+                                <button id="btnStretch" onclick="stretchIt()" class="bg-indigo-600 text-white px-8 py-4 font-bold rounded-full flex items-center gap-2 shadow-lg hover:scale-105 transition"><i data-lucide="sparkles"></i> KEMBANGKAN!</button>
+                            </div>
+                        </div>
+
+                        <!-- Translation Area -->
+                        <div id="translationArea" class="hidden mt-8 animate-fadeIn">
+                            <p class="text-sm font-black text-indigo-600 uppercase mb-4 tracking-widest">Terjemahkan ayat lengkap ini ke Bahasa Inggeris:</p>
+                            <input type="text" id="translationInput" class="input-flat text-xl border-black w-full max-w-2xl" placeholder="Type the English translation here...">
+                            <div class="flex gap-4 justify-center mt-6">
+                                <button onclick="checkTranslation()" class="bg-black text-white px-8 py-4 font-bold rounded-full flex items-center gap-2 shadow-lg hover:scale-105 transition">SEMAK & MAJU <i data-lucide="arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- FASA 4: SKROL DIRAJA (Kini Fasa 3) -->
+            <div id="phase4" class="hidden phase-container w-full text-center flex flex-col items-center py-10 overflow-y-auto">
+                <h2 class="text-5xl font-black mb-6 uppercase serif-font italic tracking-widest text-black">Keputusan Misi</h2>
+                
+                <div class="royal-scroll shadow-2xl relative">
+                    <div class="scroll-ornament -top-8 -left-8"><i data-lucide="crown"></i></div>
+                    <div class="scroll-ornament -top-8 -right-8"><i data-lucide="crown"></i></div>
+                    <div class="scroll-ornament -bottom-8 -left-8"><i data-lucide="crown"></i></div>
+                    <div class="scroll-ornament -bottom-8 -right-8"><i data-lucide="crown"></i></div>
+
+                    <div class="border-b-2 border-[#C5A059] mb-8 pb-4 text-center">
+                        <h3 class="serif-font text-3xl font-bold text-[#8B6B3F]">Watikah Kecemerlangan</h3>
+                        <p class="text-[#8B6B3F] font-bold uppercase text-xs tracking-[0.5em] mt-2" id="reportName">PELAJAR</p>
+                    </div>
+
+                    <div id="scrollContent" class="space-y-8 text-left font-serif italic text-lg text-slate-800 leading-relaxed">
+                        <!-- Hasil kerja dijanakan oleh JS -->
+                    </div>
+
+                    <div class="mt-12 pt-8 border-t border-[#C5A059] flex justify-between items-center opacity-60">
+                        <span class="text-xs font-bold italic">Disahkan oleh Cikgu Adibah</span>
+                        <div class="text-xs font-black uppercase tracking-widest">Penguasaan Tahun 8</div>
+                    </div>
+                </div>
+
+                <button onclick="window.location.reload()" class="mt-12 bg-black text-white px-10 py-4 font-black text-xl hover:scale-110 transition">MULA SEMULA</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        lucide.createIcons();
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPrSLzaBSQQP_dC9JzjcVVly4By9X7DMu3AyZxNC5010gBubzH31-mRQ9fapixYvlYkA/exec'; 
+        let currentRole = '', tPage = 1, p1Score = 0, pollingInterval, answered = new Set(), legoChallengeIndex = 0;
+        let legoResults = [];
+        let teacherModeActive = false; // Flag untuk mod guru
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        const legoChallenges = [
+            { 
+                title: "Senario 1", prompt: "Ali ke sekolah:", english: "Ali is going to school:", subject: "Ali", object: "sekolah", 
+                correct: [["pergi", "ke"]], 
+                options: { verbs: ["pergi", "tidur"], ksns: ["ke", "di"] },
+                stretchSuffix: "menaiki bas.",
+                fullEng: "Ali goes to school by bus."
+            },
+            { 
+                title: "Senario 2", prompt: "Siti di bilik:", english: "Siti is in the room:", subject: "Siti", object: "bilik tidur", 
+                correct: [["tidur", "di"]], 
+                options: { verbs: ["tidur", "duduk"], ksns: ["di", "ke"] },
+                stretchSuffix: "pada waktu malam.",
+                fullEng: "Siti sleeps in the bedroom at night."
+            },
+            { 
+                title: "Senario 3", prompt: "Kek daripada coklat:", english: "The cake is made of chocolate:", subject: "Kek itu", object: "coklat", 
+                correct: [["dibuat", "daripada"]], 
+                options: { verbs: ["dibuat", "diletakkan"], ksns: ["daripada", "dari"] },
+                stretchSuffix: "yang sedap.",
+                fullEng: "The cake is made of delicious chocolate."
+            },
+            { 
+                title: "Senario 4", prompt: "Cikgu beri hadiah:", english: "Teacher gives a gift:", subject: "Cikgu", object: "murid", 
+                correct: [["memberikan hadiah", "kepada"]], 
+                options: { verbs: ["memberikan hadiah", "bercakap"], ksns: ["kepada", "dari"] },
+                stretchSuffix: "yang rajin.",
+                fullEng: "The teacher gives a gift to the hardworking student."
+            },
+            { 
+                title: "Senario 5", prompt: "Ayah dari pejabat:", english: "Father is coming from the office:", subject: "Ayah", object: "pejabat", 
+                correct: [["pulang", "dari"]], 
+                options: { verbs: ["pulang", "datang"], ksns: ["dari", "ke"] },
+                stretchSuffix: "dengan kereta.",
+                fullEng: "Father returns from the office by car."
+            }
+        ];
+
+        const questions = [
+            {q: "Meja itu dibuat ________ kayu.", a: "daripada", o: ["dari", "daripada"]},
+            {q: "Ibu memasak ________ dapur.", a: "di", o: ["di", "ke"]},
+            {q: "Ayah pulang ________ pejabat.", a: "dari", o: ["dari", "daripada"]},
+            {q: "Ali beri buku ________ Siti.", a: "kepada", o: ["kepada", "pada"]},
+            {q: "Jam itu ada ________ dinding.", a: "pada", o: ["pada", "di"]},
+            {q: "Kami pergi ________ Melaka.", a: "ke", o: ["ke", "di"]},
+            {q: "Dia menunggu ________ tadi.", a: "sejak", o: ["sejak", "hingga"]},
+            {q: "Pelajar itu hormat ________ ibu bapa.", a: "terhadap", o: ["terhadap", "tentang"]},
+            {q: "Buku itu ________ sejarah.", a: "tentang", o: ["tentang", "oleh"]},
+            {q: "Hadiah ini ________ guru.", a: "untuk", o: ["untuk", "oleh"]}
+        ];
+
+        function startApp(role) {
+            const name = document.getElementById('studentName').value.trim();
+            if (role === 'student' && !name) return alert("Sila masukkan nama penuh anda!");
+            currentRole = role;
+            document.getElementById('view-landing').classList.remove('active');
+            if(role === 'teacher') {
+                document.getElementById('view-teacher').classList.add('active');
+                initTeacher();
+            } else {
+                document.getElementById('view-student').classList.add('active');
+                initMCQ(); loadLegoChallenge();
+            }
+        }
+
+        function initTeacher() {
+            const container = document.getElementById('teacherContainer'), p40 = document.getElementById('tp40');
+            for (let i = 2; i < 40; i++) {
+                if (document.getElementById(`tp${i}`)) continue;
+                const pg = document.createElement('div'); pg.className = 'page'; pg.id = `tp${i}`;
+                pg.innerHTML = `<h2 class="text-giant-header serif-font italic text-black">Slaid ${i}</h2><p class="text-giant-body text-black">Penerangan Mendalam KSN</p>`;
+                container.insertBefore(pg, p40);
+            }
+        }
+
+        function changeTeacherPage(delta) {
+            document.getElementById(`tp${tPage}`).classList.remove('active');
+            tPage = Math.max(1, Math.min(40, tPage + delta));
+            document.getElementById(`tp${tPage}`).classList.add('active');
+            document.getElementById('teacherIndicator').innerText = `${tPage.toString().padStart(2,'0')} / 40`;
+            if (tPage === 40) startPolling(); else stopPolling();
+        }
+
+        function jumpToMonitor() {
+            document.getElementById(`tp${tPage}`).classList.remove('active');
+            tPage = 40;
+            document.getElementById(`tp${tPage}`).classList.add('active');
+            startPolling();
+        }
+
+        function initMCQ() {
+            const container = document.getElementById('mcqContainer');
+            const shuffledQs = shuffle([...questions]);
+            container.innerHTML = shuffledQs.map((q, i) => {
+                const shuffledOptions = shuffle([...q.o]);
+                return `
+                <div class="text-center mb-10" data-correct-answer="${q.a}">
+                    <p class="text-3xl font-bold mb-6 text-black">${i+1}. ${q.q}</p>
+                    <div class="flex gap-4 justify-center" data-q-index="${i}">
+                        ${shuffledOptions.map(opt => `<button onclick="checkSelection(this, '${q.a}', 'q${i}')" class="lego-box flex-1 text-black">${opt}</button>`).join('')}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function checkSelection(btn, correct, id) {
+            if (answered.has(id)) return;
+            if (btn.textContent === correct) {
+                btn.classList.add('correct'); answered.add(id); p1Score++;
+                document.getElementById('mcqProgress').innerText = `Skor: ${p1Score} / 10`;
+                if (p1Score === 10) document.getElementById('btnToPhase2').classList.remove('hidden');
+            } else { btn.classList.add('wrong'); setTimeout(() => btn.classList.remove('wrong'), 800); }
+        }
+
+        function loadLegoChallenge() {
+            const c = legoChallenges[legoChallengeIndex];
+            document.getElementById('legoScenarioTitle').innerText = `Misi ${legoChallengeIndex + 1}`;
+            document.getElementById('legoPrompt').innerText = c.prompt;
+            document.getElementById('legoEnglish').innerText = c.english;
+            document.getElementById('legoSubject').innerText = c.subject;
+            document.getElementById('legoObject').innerText = c.object;
+            document.getElementById('legoVerb').innerHTML = '<option value="">(Tindakan?)</option>' + shuffle([...c.options.verbs]).map(v => `<option value="${v}">${v}</option>`).join('');
+            document.getElementById('legoKsn').innerHTML = '<option value="">(Kata Sendi?)</option>' + shuffle([...c.options.ksns]).map(k => `<option value="${k}">${k}</option>`).join('');
+            
+            // UI Reset
+            document.getElementById('resultArea').classList.add('hidden');
+            document.getElementById('stretchControls').classList.remove('hidden');
+            document.getElementById('translationArea').classList.add('hidden');
+            document.getElementById('translationInput').value = '';
+
+            // TEACHER BYPASS LOGIC FOR PHASE 2
+            if(teacherModeActive) {
+                // Auto-select correct answers
+                document.getElementById('legoVerb').value = c.correct[0][0];
+                document.getElementById('legoKsn').value = c.correct[0][1];
+                updateLego();
+            }
+        }
+
+        function updateLego() {
+            const v = document.getElementById('legoVerb').value, k = document.getElementById('legoKsn').value, c = legoChallenges[legoChallengeIndex];
+            if(v && k) {
+                document.getElementById('resultArea').classList.remove('hidden');
+                document.getElementById('finalSentence').innerText = `${c.subject} ${v} ${k} ${c.object}`;
+                const isCorrect = c.correct.some(pair => pair[0] === v && pair[1] === k);
+                if(isCorrect) {
+                    document.getElementById('legoGoalHint').innerText = "✅ Sila tekan 'KEMBANGKAN' untuk Bintang Penguasaan!";
+                    document.getElementById('btnStretch').classList.remove('opacity-50');
+                } else {
+                    document.getElementById('legoGoalHint').innerText = "⚠️ Logik ayat kurang tepat mengikut DBP. Sila betulkan.";
+                    document.getElementById('btnStretch').classList.add('opacity-50');
+                }
+            }
+        }
+
+        function stretchIt() {
+            if(document.getElementById('btnStretch').classList.contains('opacity-50')) return;
+            
+            const c = legoChallenges[legoChallengeIndex];
+            const s = document.getElementById('finalSentence');
+            
+            // Apply varied suffix
+            s.innerText = `${c.subject} ${document.getElementById('legoVerb').value} ${document.getElementById('legoKsn').value} ${c.object} ${c.stretchSuffix}`;
+            
+            // Switch to Translation Mode
+            document.getElementById('stretchControls').classList.add('hidden');
+            document.getElementById('translationArea').classList.remove('hidden');
+            
+            // TEACHER BYPASS PRE-FILL
+            if(teacherModeActive) {
+                document.getElementById('translationInput').value = c.fullEng;
+            } else {
+                document.getElementById('translationInput').focus();
+            }
+            
+            lucide.createIcons();
+        }
+
+        function checkTranslation() {
+            const userTrans = document.getElementById('translationInput').value.trim();
+            if(userTrans.length < 5) return alert("Sila masukkan terjemahan yang lengkap.");
+
+            // Store result
+            legoResults.push({
+                bm: document.getElementById('finalSentence').innerText,
+                bi: userTrans
+            });
+
+            document.getElementById(`star-${legoChallengeIndex}`).classList.add('filled');
+            
+            // Move Next or Finish
+            legoChallengeIndex++;
+            if(legoChallengeIndex < legoChallenges.length) {
+                loadLegoChallenge();
+            } else {
+                submitWork(); // Skip phase 3, go to phase 4
+            }
+        }
+
+        function generateScroll() {
+            const name = document.getElementById('studentName').value;
+            document.getElementById('reportName').innerText = name;
+            
+            // New Lego Report Format (BM + BI)
+            let legoHtml = legoResults.map(r => `
+                <div class="mb-4">
+                    <p>✨ <strong>BM:</strong> ${r.bm}</p>
+                    <p class="text-sm text-slate-500 italic">🇬🇧 <strong>BI:</strong> ${r.bi}</p>
+                </div>
+            `).join('');
+
+            document.getElementById('scrollContent').innerHTML = `
+                <div class="mb-6">
+                    <p class="font-bold text-[#8B6B3F] mb-4 uppercase text-xs">I. Pembina Pujangga (Mastery):</p>
+                    ${legoHtml}
+                </div>`;
+            lucide.createIcons();
+        }
+
+        async function submitWork() {
+            generateScroll();
+            const name = document.getElementById('studentName').value;
+            
+            // Format data untuk backend: Gabungkan semua ayat BM & BI
+            const legoData = legoResults.map(r => `${r.bm} (${r.bi})`).join(' | ');
+
+            if(SCRIPT_URL) {
+                try { await fetch(SCRIPT_URL, {method:'POST', mode:'no-cors', body:JSON.stringify({nama:name, soalan1:legoData, soalan2:"Watikah"})}); } catch (e) {}
+            }
+            goToPhase(4);
+        }
+
+        function goToPhase(p) {
+            document.querySelectorAll('.phase-container').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`phase${p}`).classList.remove('hidden');
+            document.getElementById('progressFill').style.width = (p/4)*100 + "%";
+            if(p === 1) document.getElementById('studentPhaseTitle').innerText = "Fasa 1: Pilihan Kata";
+            if(p === 2) document.getElementById('studentPhaseTitle').innerText = "Fasa 2: Pembina Pujangga";
+            if(p === 4) document.getElementById('studentPhaseTitle').innerText = "Fasa 3: Watikah";
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function teacherBypass() {
+            if (prompt("Masukkan Kod Pintasan:") === "4321") {
+                teacherModeActive = true;
+                
+                // PHASE 1: Reveal Answers (Fixed Logic)
+                const containers = document.querySelectorAll('[data-correct-answer]');
+                containers.forEach(container => {
+                    const correctAns = container.getAttribute('data-correct-answer');
+                    container.querySelectorAll('button').forEach(b => {
+                        if (b.textContent === correctAns) b.classList.add('correct');
+                    });
+                });
+                
+                p1Score = 10;
+                document.getElementById('mcqProgress').innerText = `Skor: 10 / 10`;
+                document.getElementById('btnToPhase2').classList.remove('hidden');
+
+                // If currently in Phase 2, apply auto-fill immediately
+                if(!document.getElementById('phase2').classList.contains('hidden')) {
+                    loadLegoChallenge();
+                }
+
+                alert("Mod Guru Diaktifkan: Jawapan akan dipaparkan dan diisi secara automatik.");
+            }
+        }
+
+        async function fetchLiveFeed() {
+            if (!SCRIPT_URL) return;
+            try {
+                const res = await fetch(SCRIPT_URL), data = await res.json();
+                document.getElementById('liveGallery').innerHTML = data.slice().reverse().map(row => `<div class="p-4 bg-white border-2 border-black shadow-[4px_4px_0px_#000] text-black"><span class="font-bold text-xs bg-black text-white px-2">${row.nama}</span><p class="text-[10px] mt-2">${row.soalan1}</p></div>`).join('');
+            } catch (e) {}
+        }
+
+        function startPolling() { fetchLiveFeed(); pollingInterval = setInterval(fetchLiveFeed, 800); }
+        function stopPolling() { clearInterval(pollingInterval); }
+
+        document.addEventListener('keydown', (e) => {
+            const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
+            if(currentRole === 'teacher') {
+                if(e.key === 'ArrowRight') changeTeacherPage(1);
+                if(e.key === 'ArrowLeft') changeTeacherPage(-1);
+            }
+            if(e.key.toLowerCase() === 'f' && !isInput) {
+                if(!document.fullscreenElement) document.documentElement.requestFullscreen();
+                else document.exitFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>
