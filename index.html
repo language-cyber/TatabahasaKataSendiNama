@@ -3,555 +3,586 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuasai Kata Sendi Nama - Edisi Diraja (DBP)</title>
+    <title>Kuasai Kata Sendi Nama - Edisi Diraja (DBP Style)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap');
         
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #fcfcfc;
-            color: #000000;
-            overflow-x: hidden;
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #fcfcfc; 
+            color: #000; 
+            overflow-x: hidden; 
             scroll-behavior: smooth;
         }
 
         .serif-font { font-family: 'Playfair Display', serif; }
 
-        /* --- TIPOGRAFI GAYA NEIL (1.75x) --- */
-        .text-giant-header {
-            font-size: clamp(5.5rem, 18vw, 10.5rem); 
-            line-height: 1;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-        }
-        .text-giant-body {
-            font-size: clamp(2.8rem, 9vw, 5.5rem);
-            line-height: 1.2;
-            font-weight: 700;
-        }
+        /* --- Tipografi --- */
+        .text-giant-header { font-size: clamp(4rem, 15vw, 8rem); line-height: 1; font-weight: 800; letter-spacing: -0.04em; text-align: center; }
+        .text-giant-body { font-size: clamp(2.2rem, 7vw, 4rem); line-height: 1.2; font-weight: 700; text-align: center; }
+        .text-dual { font-size: clamp(1.5rem, 4vw, 2.5rem); color: #94a3b8; font-style: italic; font-weight: 500; text-align: center; }
 
-        /* --- SUSUN ATUR --- */
+        /* --- Layout --- */
         .view-section { display: none; min-height: 100vh; width: 100%; flex-direction: column; align-items: center; justify-content: center; }
         .view-section.active { display: flex; }
-        .page { display: none; animation: fadeIn 0.4s ease-in-out; width: 100%; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .page.active { display: flex; }
+        .page { display: none; animation: fadeIn 0.4s ease-out; width: 100%; text-align: center; padding: 2rem; }
+        .page.active { display: block; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shakeError { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        
+        .shake { animation: shakeError 0.4s ease-in-out; border-color: #ef4444 !important; }
 
-        /* --- KOMPONEN UI --- */
+        /* --- UI Components --- */
         .objective-box {
             position: fixed; top: 30px; left: 40px; background: #000; color: #fff;
-            padding: 10px 30px; border-radius: 4px; font-size: 1rem; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 0.1em; z-index: 100;
-            display: flex; gap: 12px; align-items: center;
+            padding: 10px 30px; border-radius: 4px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.1em; z-index: 100; display: flex; gap: 12px; align-items: center;
         }
+        
         .input-flat {
-            border-bottom: 12px solid #e2e8f0; outline: none; padding: 0 15px;
+            border-bottom: 8px solid #e2e8f0; outline: none; padding: 0 15px;
             text-align: center; font-weight: 800; color: #4f46e5; width: 100%;
-            max-width: 900px; background: transparent; font-size: clamp(2rem, 6vw, 4rem); transition: all 0.3s;
+            max-width: 900px; background: transparent; font-size: clamp(1.5rem, 5vw, 3rem); transition: all 0.3s;
         }
-        .lego-box {
-            border: 4px solid #000; padding: 20px; background: #fff; box-shadow: 6px 6px 0px #000;
-            font-weight: 800; font-size: 1.5rem; width: 100%; cursor: pointer; transition: 0.2s; text-align: center;
-        }
-        .lego-box.correct { background-color: #dcfce7; border-color: #22c55e; color: #166534; }
-        .lego-box.wrong { background-color: #fee2e2; border-color: #ef4444; color: #991b1b; }
+        .input-flat:focus { border-color: #000; }
 
-        /* --- SKROL DIRAJA --- */
-        .royal-scroll {
-            background: #fff9ed;
-            border: 20px solid transparent;
-            border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 L100,0 L100,100 L0,100 Z' fill='none' stroke='%23C5A059' stroke-width='10'/%3E%3Ccircle cx='0' cy='0' r='10' fill='%23C5A059'/%3E%3Ccircle cx='100' cy='0' r='10' fill='%23C5A059'/%3E%3Ccircle cx='100' cy='100' r='10' fill='%23C5A059'/%3E%3Ccircle cx='0' cy='100' r='10' fill='%23C5A059'/%3E%3C/svg%3E") 30 stretch;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            padding: 3rem;
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin: 2rem auto;
+        /* --- Chat Style --- */
+        .chat-container {
+            width: 100%; max-width: 800px; height: 550px; background: #e5ddd5;
+            border: 4px solid #000; border-radius: 24px; overflow: hidden;
+            display: flex; flex-direction: column; box-shadow: 12px 12px 0px rgba(0,0,0,0.1);
         }
-
-        .scroll-ornament {
-            position: absolute;
-            width: 60px; height: 60px;
-            background: #C5A059;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; border: 4px solid #fff;
+        .chat-bubble {
+            max-width: 75%; padding: 14px 18px; border-radius: 18px; margin-bottom: 10px;
+            font-size: 1.15rem; line-height: 1.4; position: relative; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .bubble-left { background: #fff; border-bottom-left-radius: 2px; align-self: flex-start; }
+        .bubble-right { background: #dcf8c6; border-bottom-right-radius: 2px; align-self: flex-end; }
+        
+        .monitor-card {
+            background: #fff; border: 2px solid #000; border-radius: 16px; padding: 20px;
+            margin-bottom: 15px; box-shadow: 6px 6px 0px rgba(0,0,0,0.1); text-align: left;
         }
 
-        .mastery-star {
-            width: 45px; height: 45px; border: 3px solid #000; display: flex; align-items: center; justify-content: center;
-            background: #fff; transition: all 0.3s;
-        }
-        .mastery-star.filled { background: #facc15; transform: scale(1.1) rotate(10deg); }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .nav-bar {
-            width: 85vw; max-width: 1400px; display: flex; justify-content: space-between; align-items: center;
-            padding: 2rem; position: fixed; bottom: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); z-index: 90;
+        .mastery-star { width: 45px; height: 45px; border: 3px solid #000; display: flex; align-items: center; justify-content: center; background: #fff; transition: all 0.3s; font-size: 1.5rem; }
+        .mastery-star.filled { background: #facc15; transform: scale(1.1) rotate(10deg); color: #000; }
+        
+        /* Dropdown Styling */
+        select.ksn-select {
+            appearance: none; background: #f1f5f9; border: 4px solid #000; border-radius: 12px;
+            padding: 5px 20px; font-weight: 800; color: #4f46e5; cursor: pointer; outline: none;
+            transition: all 0.2s; text-align: center;
+        }
+        select.ksn-select:focus { background: #fff; border-color: #4f46e5; }
+        select.ksn-select.correct { border-color: #22c55e; color: #22c55e; background: #f0fdf4; pointer-events: none; }
+        
+        .key-tip {
+            position: fixed; bottom: 30px; right: 30px; font-size: 0.8rem;
+            color: #94a3b8; font-weight: 800; text-transform: uppercase; z-index: 200;
+            background: rgba(255,255,255,0.8); padding: 5px 10px; border-radius: 8px; backdrop-filter: blur(5px);
         }
     </style>
 </head>
 <body class="flex flex-col items-center">
 
-    <div class="h-2 w-full bg-gray-100 fixed top-0 z-[110]">
+    <div class="fixed top-0 left-0 h-2 bg-gray-100 w-full z-[200]">
         <div id="progressFill" class="h-full bg-black transition-all duration-500" style="width: 0%"></div>
     </div>
 
-    <!-- 1. HALAMAN UTAMA -->
-    <section id="view-landing" class="view-section active p-6 w-full">
-        <h1 class="text-giant-header mb-12 text-center serif-font italic">Kata<br>Sendi Nama.</h1>
-        <div id="loginForm" class="mb-12 w-full max-w-md flex flex-col items-center">
-            <input type="text" id="studentName" class="input-flat text-2xl mb-8 font-serif" placeholder="Nama Anda (Sila isi)">
-            <div class="flex flex-col md:flex-row gap-8 w-full">
-                <button onclick="startApp('teacher')" class="flex-1 p-8 border-4 border-black hover:bg-black hover:text-white transition group text-center">
-                    <i data-lucide="presentation" class="w-12 h-12 mx-auto mb-4"></i>
-                    <span class="text-2xl font-black uppercase">Mod Guru</span>
-                </button>
-                <button onclick="startApp('student')" class="flex-1 p-8 border-4 border-black hover:bg-black hover:text-white transition group text-center">
-                    <i data-lucide="edit-3" class="w-12 h-12 mx-auto mb-4"></i>
-                    <span class="text-2xl font-black uppercase">Mod Pelajar</span>
-                </button>
+    <div class="objective-box">
+        <span class="text-indigo-600">Objektif:</span>
+        <span id="currentObjective">Memulakan Sesi</span>
+    </div>
+
+    <div id="keyTipMsg" class="key-tip hidden md:block">F: Fullscreen | ← → : Navigasi | Scroll: Slide</div>
+
+    <!-- LANDING VIEW -->
+    <section id="view-landing" class="view-section active">
+        <h1 class="text-giant-header serif-font italic mb-12">Kata Sendi<br>Nama.</h1>
+        <div class="w-full max-w-md flex flex-col items-center">
+            <input type="text" id="studentName" class="input-flat text-2xl mb-8 uppercase" placeholder="NAMA PENUH ANDA">
+            <div class="grid grid-cols-2 gap-4 w-full">
+                <button onclick="startApp('teacher')" class="p-8 border-4 border-black font-black uppercase text-sm hover:bg-black hover:text-white transition">Mod Guru</button>
+                <button onclick="startApp('student')" class="p-8 border-4 border-black font-black uppercase text-sm hover:bg-black hover:text-white transition">Mod Pelajar</button>
             </div>
         </div>
     </section>
 
-    <!-- 2. MOD GURU (MONITOR) -->
-    <section id="view-teacher" class="view-section w-full">
-        <div class="objective-box">🚀 <span>Pantau: Kemajuan Langsung</span></div>
-        <button onclick="jumpToMonitor()" class="fixed top-[100px] left-10 bg-indigo-600 text-white px-6 py-2 rounded-full text-xs font-black shadow-lg z-[101] hover:bg-black transition flex items-center gap-2">
-            <i data-lucide="monitor" class="w-4 h-4"></i> MAKLUM BALAS LANGSUNG
-        </button>
+    <!-- TEACHER VIEW -->
+    <section id="view-teacher" class="view-section w-full bg-[#f8fafc]">
+        <div class="fixed top-[100px] left-10 flex flex-col gap-3 z-[101]">
+            <button onclick="jumpToMonitor()" class="bg-[#075e54] text-white px-6 py-3 rounded-full text-xs font-black shadow-lg hover:bg-black transition flex items-center gap-2">
+                <i data-lucide="monitor" class="w-4 h-4"></i> LIVE MONITOR
+            </button>
+            <button onclick="hardResetData()" class="bg-red-600 text-white px-6 py-3 rounded-full text-[10px] font-black shadow-lg hover:bg-black transition flex items-center gap-2">
+                <i data-lucide="trash-2" class="w-4 h-4"></i> RESET KELAS
+            </button>
+        </div>
 
-        <div id="teacherContainer" class="w-full flex flex-col items-center px-8">
-            <div class="page active" id="tp1">
-                <h1 class="text-giant-header serif-font italic">Arkib Guru</h1>
-                <p class="text-2xl font-black text-gray-300 animate-pulse uppercase mt-8 tracking-widest text-black">Gunakan kekunci anak panah (->) untuk rujukan slaid</p>
+        <div id="teacherContainer" class="w-full relative px-10">
+            <!-- Slide 1: Tajuk -->
+            <div class="page active" id="tp1" data-obj="Pengenalan Topik">
+                <h1 class="text-giant-header">Kata Sendi Nama</h1>
             </div>
-            
-            <div class="page" id="tp40">
-                <h2 class="text-6xl font-black uppercase mb-8 serif-font">Balai Laporan</h2>
-                <div id="liveGallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl overflow-y-auto max-h-[65vh] p-4">
-                    <p class="text-gray-400 italic text-2xl col-span-full">Menunggu kiriman hasil kerja...</p>
+
+            <!-- Slide 2-13 (Penerangan KSN) akan di-generate oleh JavaScript di sini -->
+
+            <!-- Slide Monitor -->
+            <div class="page" id="tpLast" data-obj="Monitor Live Feed">
+                <div class="w-full max-w-7xl h-[85vh] bg-[#f1f5f9] border-4 border-black mx-auto rounded-3xl overflow-hidden flex flex-col shadow-[12px_12px_0px_#000]">
+                    <div class="bg-black p-6 flex items-center justify-between text-white">
+                        <div class="flex items-center gap-4">
+                            <i data-lucide="activity" class="w-8 h-8 text-green-400"></i>
+                            <div>
+                                <h3 class="font-bold text-xl uppercase tracking-widest">Radar Guru (Live)</h3>
+                                <p class="text-xs text-gray-400" id="lastSync">Bersedia untuk menyegerak...</p>
+                            </div>
+                        </div>
+                        <div id="connectionDot" class="w-4 h-4 rounded-full bg-red-500 animate-pulse"></div>
+                    </div>
+                    <!-- Grid Pelajar -->
+                    <div id="liveGallery" class="flex-1 p-8 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="text-center w-full col-span-full text-slate-400 font-bold mt-10">Menunggu data pelajar...</div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="nav-bar">
-            <button onclick="changeTeacherPage(-1)" class="text-black font-black text-2xl uppercase">← Undur</button>
-            <span id="teacherIndicator" class="text-2xl font-black text-slate-300 tracking-[0.4em]">01 / 40</span>
-            <button onclick="changeTeacherPage(1)" class="text-black font-black text-2xl uppercase">Maju →</button>
-        </div>
-    </section>
-
-    <!-- 3. MOD PELAJAR (Latihan) -->
-    <section id="view-student" class="view-section p-8 w-full relative">
-        <div class="objective-box">🎯 <span id="studentPhaseTitle">Fasa 1: Pilihan Kata</span></div>
         
-        <!-- PINTASAN GURU -->
-        <button onclick="teacherBypass()" class="fixed top-[100px] left-10 bg-yellow-400 text-black px-4 py-2 rounded-full text-[10px] font-black shadow-lg z-[101] border-2 border-black opacity-20 hover:opacity-100 transition-opacity">
-            <i data-lucide="unlock" class="w-3 h-3 inline mr-1"></i> PINTASAN GURU
-        </button>
+        <div class="fixed bottom-10 flex gap-8 font-black text-2xl uppercase z-[101]">
+            <button id="prevBtnT" onclick="changeTeacherPage(-1)">← Undur</button>
+            <span id="teacherIndicator">01 / 14</span>
+            <button id="nextBtnT" onclick="changeTeacherPage(1)">Maju →</button>
+        </div>
+    </section>
 
-        <div id="studentContainer" class="w-full max-w-5xl flex flex-col items-center">
+    <!-- STUDENT VIEW -->
+    <section id="view-student" class="view-section p-8 w-full">
+        <div class="objective-box">🎯 <span id="studentPhaseTitle">Fasa 2: Latihan Pengukuhan</span></div>
+        
+        <div id="studentContainer" class="w-full max-w-5xl">
             
-            <!-- FASA 1: MCQ (DIRAWAKKAN) -->
-            <div id="phase1" class="phase-container w-full flex flex-col items-center space-y-12">
-                <h2 class="text-giant-body mb-8 serif-font text-black">Pilih Pasangan Tepat</h2>
-                <div class="w-full space-y-12 overflow-y-auto max-h-[55vh] p-4" id="mcqContainer"></div>
-                <div class="text-xl font-bold text-gray-400 uppercase tracking-widest" id="mcqProgress">Skor: 0 / 10</div>
-                <button id="btnToPhase2" onclick="goToPhase(2)" class="hidden w-full py-8 bg-black text-white text-3xl font-black uppercase shadow-xl">Maju ke Fasa 2 ➡️</button>
-            </div>
-
-            <!-- FASA 2: PEMBINA PUJANGGA -->
-            <div id="phase2" class="hidden phase-container w-full flex flex-col items-center">
-                <div class="flex gap-4 mb-8" id="masteryStars">
-                    <div class="mastery-star" id="star-0"><i data-lucide="star" class="w-6 h-6"></i></div>
-                    <div class="mastery-star" id="star-1"><i data-lucide="star" class="w-6 h-6"></i></div>
-                    <div class="mastery-star" id="star-2"><i data-lucide="star" class="w-6 h-6"></i></div>
-                    <div class="mastery-star" id="star-3"><i data-lucide="star" class="w-6 h-6"></i></div>
-                    <div class="mastery-star" id="star-4"><i data-lucide="star" class="w-6 h-6"></i></div>
+            <!-- Phase 2: LEGO (5 Soalan) -->
+            <div id="phase2" class="phase-container flex flex-col items-center">
+                <div class="flex gap-2 mb-8" id="starContainer">
+                    <div class="mastery-star" id="star-0">1</div><div class="mastery-star" id="star-1">2</div>
+                    <div class="mastery-star" id="star-2">3</div><div class="mastery-star" id="star-3">4</div>
+                    <div class="mastery-star" id="star-4">5</div>
                 </div>
-
-                <h2 class="text-giant-body mb-8 serif-font text-black">Pembina Pujangga</h2>
-                <div class="bg-gray-50 p-12 border-4 border-black relative w-full mb-12 shadow-[12px_12px_0px_#000]">
-                    <div class="absolute -top-6 left-10 bg-black text-white px-4 py-2 font-black text-xs uppercase" id="legoScenarioTitle">Misi 1</div>
-                    
-                    <div class="mb-8 text-center">
-                        <p class="text-2xl font-bold text-black" id="legoPrompt">...</p>
-                        <p class="text-lg text-slate-400 italic mt-2" id="legoEnglish">...</p>
-                    </div>
-
-                    <div class="flex flex-wrap items-center justify-center gap-6 text-4xl font-bold text-black">
-                        <span id="legoSubject">...</span>
-                        <select id="legoVerb" class="border-b-4 border-black bg-transparent outline-none py-2" onchange="updateLego()">
-                            <option value="">(Tindakan?)</option>
-                        </select>
-                        <select id="legoKsn" class="border-b-4 border-black bg-transparent outline-none py-2" onchange="updateLego()">
-                            <option value="">(Kata Sendi?)</option>
-                        </select>
-                        <span id="legoObject">...</span>
-                    </div>
-
-                    <div id="resultArea" class="hidden mt-12 pt-12 border-t-2 border-gray-200 text-center">
-                        <h3 id="finalSentence" class="text-5xl font-black leading-tight text-black italic">...</h3>
-                        
-                        <!-- Stretch Area -->
-                        <div id="stretchControls">
-                            <p id="legoGoalHint" class="text-sm font-bold text-red-500 uppercase mt-4">Sila tekan 'KEMBANGKAN' untuk peluasan ayat!</p>
-                            <div class="flex gap-4 justify-center mt-8">
-                                <button id="btnStretch" onclick="stretchIt()" class="bg-indigo-600 text-white px-8 py-4 font-bold rounded-full flex items-center gap-2 shadow-lg hover:scale-105 transition"><i data-lucide="sparkles"></i> KEMBANGKAN!</button>
-                            </div>
-                        </div>
-
-                        <!-- Translation Area -->
-                        <div id="translationArea" class="hidden mt-8 animate-fadeIn">
-                            <p class="text-sm font-black text-indigo-600 uppercase mb-4 tracking-widest">Terjemahkan ayat lengkap ini ke Bahasa Inggeris:</p>
-                            <input type="text" id="translationInput" class="input-flat text-xl border-black w-full max-w-2xl" placeholder="Type the English translation here...">
-                            <div class="flex gap-4 justify-center mt-6">
-                                <button onclick="checkTranslation()" class="bg-black text-white px-8 py-4 font-bold rounded-full flex items-center gap-2 shadow-lg hover:scale-105 transition">SEMAK & MAJU <i data-lucide="arrow-right"></i></button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- FASA 4: SKROL DIRAJA (Kini Fasa 3) -->
-            <div id="phase4" class="hidden phase-container w-full text-center flex flex-col items-center py-10 overflow-y-auto">
-                <h2 class="text-5xl font-black mb-6 uppercase serif-font italic tracking-widest text-black">Keputusan Misi</h2>
                 
-                <div class="royal-scroll shadow-2xl relative">
-                    <div class="scroll-ornament -top-8 -left-8"><i data-lucide="crown"></i></div>
-                    <div class="scroll-ornament -top-8 -right-8"><i data-lucide="crown"></i></div>
-                    <div class="scroll-ornament -bottom-8 -left-8"><i data-lucide="crown"></i></div>
-                    <div class="scroll-ornament -bottom-8 -right-8"><i data-lucide="crown"></i></div>
-
-                    <div class="border-b-2 border-[#C5A059] mb-8 pb-4 text-center">
-                        <h3 class="serif-font text-3xl font-bold text-[#8B6B3F]">Watikah Kecemerlangan</h3>
-                        <p class="text-[#8B6B3F] font-bold uppercase text-xs tracking-[0.5em] mt-2" id="reportName">PELAJAR</p>
+                <h2 class="text-giant-body mb-4" id="p2Title">Latihan 1/5</h2>
+                <p class="text-xl text-slate-500 font-bold mb-8 uppercase tracking-widest" id="p2Context">Konteks: Arah & Tujuan</p>
+                
+                <div id="legoBox" class="bg-white p-12 border-4 border-black w-full shadow-[12px_12px_0px_#000] rounded-2xl transition-all">
+                    
+                    <div class="flex flex-wrap items-center justify-center gap-4 text-3xl md:text-5xl font-bold leading-relaxed">
+                        <span id="sSubject" class="text-slate-800">Ali</span>
+                        <span id="sVerb" class="text-slate-800">pergi</span>
+                        <select id="sKsn" class="ksn-select" onchange="validateKsn()">
+                            <option value="">(Pilih KSN)</option>
+                        </select>
+                        <span id="sObject" class="text-slate-800">sekolah.</span>
                     </div>
 
-                    <div id="scrollContent" class="space-y-8 text-left font-serif italic text-lg text-slate-800 leading-relaxed">
-                        <!-- Hasil kerja dijanakan oleh JS -->
-                    </div>
-
-                    <div class="mt-12 pt-8 border-t border-[#C5A059] flex justify-between items-center opacity-60">
-                        <span class="text-xs font-bold italic">Disahkan oleh Cikgu Adibah</span>
-                        <div class="text-xs font-black uppercase tracking-widest">Penguasaan Tahun 8</div>
+                    <div id="stretchArea" class="hidden mt-12 pt-8 border-t-4 border-dashed border-slate-200">
+                        <div class="flex items-center gap-4 justify-center mb-6">
+                            <span class="bg-green-100 text-green-700 px-4 py-1 rounded-full text-sm font-black uppercase">Jawapan Tepat!</span>
+                        </div>
+                        <p class="text-sm font-black uppercase text-indigo-500 mb-4 tracking-widest text-center">Cabaran 'Stretch It' (Terjemahan):</p>
+                        <input type="text" id="translationInput" class="input-flat border-black w-full" placeholder="Terjemah ayat di atas ke Bahasa Inggeris...">
+                        <div class="text-center mt-8">
+                            <button onclick="submitP2Question()" class="bg-black text-white px-10 py-4 font-bold rounded-full hover:scale-105 transition text-xl">HANTAR JAWAPAN & MAJU 🚀</button>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <button onclick="window.location.reload()" class="mt-12 bg-black text-white px-10 py-4 font-black text-xl hover:scale-110 transition">MULA SEMULA</button>
+            <!-- Phase 3: Sembang Santai -->
+            <div id="phase3" class="hidden phase-container flex flex-col items-center">
+                <h2 class="text-giant-body mb-8 serif-font">Sembang Santai (Live)</h2>
+                <div class="chat-container">
+                    <div class="bg-[#075e54] text-white p-4 flex justify-between font-bold">
+                        <span>Misi: Bina ayat dengan <span id="currentChatTag" class="text-yellow-300 uppercase">DARI</span></span> 
+                        <span id="chatProgressText">1 / 5</span>
+                    </div>
+                    <div id="chatArea" class="flex-1 p-6 overflow-y-auto flex flex-col gap-4 bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')]"></div>
+                    <div class="bg-white p-4 flex gap-3 border-t-2">
+                        <input type="text" id="chatInput" class="flex-1 border-2 rounded-full px-6 py-3 text-lg outline-none focus:border-[#128c7e]" placeholder="Taip ayat anda di sini..." onkeypress="if(event.key==='Enter') handleChatInput()">
+                        <button onclick="handleChatInput()" class="bg-[#128c7e] text-white p-3 rounded-full hover:bg-[#075e54] transition"><i data-lucide="send"></i></button>
+                    </div>
+                </div>
+                <button id="btnFinalSubmit" onclick="goToPhase(4)" class="hidden mt-8 bg-black text-white px-12 py-5 font-black uppercase hover:scale-105 transition shadow-xl rounded-full text-xl">Tamat Sesi 🏆</button>
+            </div>
+
+            <!-- Phase 4: Success -->
+            <div id="phase4" class="hidden phase-container flex flex-col items-center py-20 text-center">
+                <div class="text-9xl mb-8 animate-bounce">🏆</div>
+                <h2 class="text-giant-header serif-font italic">Terbaik, Boss!</h2>
+                <p class="text-2xl font-bold mt-8 text-slate-500 uppercase tracking-widest">Semua tugasan telah direkod dalam radar cikgu.</p>
             </div>
         </div>
     </section>
 
     <script>
-        lucide.createIcons();
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPrSLzaBSQQP_dC9JzjcVVly4By9X7DMu3AyZxNC5010gBubzH31-mRQ9fapixYvlYkA/exec'; 
-        let currentRole = '', tPage = 1, p1Score = 0, pollingInterval, answered = new Set(), legoChallengeIndex = 0;
-        let legoResults = [];
-        let teacherModeActive = false; // Flag untuk mod guru
+        // ⚠️ PENTING: TUKAR URL INI DENGAN URL GOOGLE APPS SCRIPT YANG BARU DI-DEPLOY!
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxYDJu7fYaCha9SgYhQjA7R5AqIFWA-MaVFCPnRTr17fUGEQR6zqN_fB7OhC6uv4mRxBg/exec';
+        
+        let currentRole = '', studentName = '', tPage = 1, pollingInterval;
+        let totalTeacherPages = 2; // Akan dikemaskini oleh initTeacherSlides
 
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        const legoChallenges = [
-            { 
-                title: "Senario 1", prompt: "Ali ke sekolah:", english: "Ali is going to school:", subject: "Ali", object: "sekolah", 
-                correct: [["pergi", "ke"]], 
-                options: { verbs: ["pergi", "tidur"], ksns: ["ke", "di"] },
-                stretchSuffix: "menaiki bas.",
-                fullEng: "Ali goes to school by bus."
-            },
-            { 
-                title: "Senario 2", prompt: "Siti di bilik:", english: "Siti is in the room:", subject: "Siti", object: "bilik tidur", 
-                correct: [["tidur", "di"]], 
-                options: { verbs: ["tidur", "duduk"], ksns: ["di", "ke"] },
-                stretchSuffix: "pada waktu malam.",
-                fullEng: "Siti sleeps in the bedroom at night."
-            },
-            { 
-                title: "Senario 3", prompt: "Kek daripada coklat:", english: "The cake is made of chocolate:", subject: "Kek itu", object: "coklat", 
-                correct: [["dibuat", "daripada"]], 
-                options: { verbs: ["dibuat", "diletakkan"], ksns: ["daripada", "dari"] },
-                stretchSuffix: "yang sedap.",
-                fullEng: "The cake is made of delicious chocolate."
-            },
-            { 
-                title: "Senario 4", prompt: "Cikgu beri hadiah:", english: "Teacher gives a gift:", subject: "Cikgu", object: "murid", 
-                correct: [["memberikan hadiah", "kepada"]], 
-                options: { verbs: ["memberikan hadiah", "bercakap"], ksns: ["kepada", "dari"] },
-                stretchSuffix: "yang rajin.",
-                fullEng: "The teacher gives a gift to the hardworking student."
-            },
-            { 
-                title: "Senario 5", prompt: "Ayah dari pejabat:", english: "Father is coming from the office:", subject: "Ayah", object: "pejabat", 
-                correct: [["pulang", "dari"]], 
-                options: { verbs: ["pulang", "datang"], ksns: ["dari", "ke"] },
-                stretchSuffix: "dengan kereta.",
-                fullEng: "Father returns from the office by car."
-            }
+        // --- DATA PENERANGAN KSN (Teacher Mode) ---
+        const notaKataSendi = [
+            { k: "DI", m: "TEMPAT (Statik)", e: "Static Location", f: "lokasi-statik.jpg", p: "Foto seorang pelajar sedang membaca buku di dalam perpustakaan yang tenang, gaya minimalis." },
+            { k: "KE", m: "ARAH / TUJUAN", e: "Direction / Destination", f: "destinasi-melaka.jpg", p: "Foto Bangunan Merah Stadthuys di Melaka dengan beca berhias di hadapannya." },
+            { k: "DARI", m: "TEMPAT / MASA ASAL", e: "Origin (Place/Time)", f: "titik-mula.jpg", p: "Foto jam loceng klasik menunjukkan pukul 8:00 pagi dengan cahaya matahari pagi." },
+            { k: "DARIPADA", m: "ORANG / BAHAN", e: "People / Material", f: "bahan-emas.jpg", p: "Foto dekat (close-up) sebilangan syiling emas dan cincin emas di atas permukaan kayu gelap." },
+            { k: "KEPADA", m: "PENERIMA (Manusia)", e: "Recipient", f: "beri-surat.jpg", p: "Foto tangan seorang kanak-kanak menghulurkan sampul surat berwarna warni kepada rakannya." },
+            { k: "PADA", m: "WAKTU / ABSTRAK", e: "Time / Abstract", f: "masa-jam.jpg", p: "Foto jam tangan moden yang elegan di atas meja kerja yang kemas." },
+            { k: "SEJAK", m: "PERMULAAN MASA", e: "Since (Starting Time)", f: "sejak-kecil.jpg", p: "Foto hitam putih seorang bayi yang sedang merangkak di atas rumput, gaya nostalgia." },
+            { k: "HINGGA", m: "HAD MASA / TEMPAT", e: "Until / Limit", f: "had-jalan.jpg", p: "Foto jalan raya yang panjang menuju ke ufuk matahari terbenam." },
+            { k: "OLEH", m: "PELAKU (Ayat Pasif)", e: "By (Passive Actor)", f: "dimakan-ali.jpg", p: "Foto seorang budak lelaki sedang makan sebiji epal merah yang besar." },
+            { k: "BAGI / UNTUK", m: "TUJUAN / KEGUNAAN", e: "Purpose", f: "tujuan-hadiah.jpg", p: "Foto kotak hadiah besar berikat reben merah di bawah pokok krismas." },
+            { k: "TENTANG", m: "PERKARA / HAL", e: "About / Regarding", f: "tentang-buku.jpg", p: "Foto timbunan buku sejarah lama di atas meja kayu dengan cermin mata di atasnya." },
+            { k: "TERHADAP", m: "SASARAN (Abstrak)", e: "Towards", f: "hormat-guru.jpg", p: "Foto siluet seorang pelajar sedang tunduk hormat kepada gurunya di hadapan kelas." }
         ];
 
-        const questions = [
-            {q: "Meja itu dibuat ________ kayu.", a: "daripada", o: ["dari", "daripada"]},
-            {q: "Ibu memasak ________ dapur.", a: "di", o: ["di", "ke"]},
-            {q: "Ayah pulang ________ pejabat.", a: "dari", o: ["dari", "daripada"]},
-            {q: "Ali beri buku ________ Siti.", a: "kepada", o: ["kepada", "pada"]},
-            {q: "Jam itu ada ________ dinding.", a: "pada", o: ["pada", "di"]},
-            {q: "Kami pergi ________ Melaka.", a: "ke", o: ["ke", "di"]},
-            {q: "Dia menunggu ________ tadi.", a: "sejak", o: ["sejak", "hingga"]},
-            {q: "Pelajar itu hormat ________ ibu bapa.", a: "terhadap", o: ["terhadap", "tentang"]},
-            {q: "Buku itu ________ sejarah.", a: "tentang", o: ["tentang", "oleh"]},
-            {q: "Hadiah ini ________ guru.", a: "untuk", o: ["untuk", "oleh"]}
+        // --- DATA FASA 2 (5 Latihan Berstruktur) ---
+        const p2Data = [
+            { context: "Arah & Tujuan", s: "Kamal", v: "berbasikal", opts: ["di", "ke", "dari"], ans: "ke", o: "taman rekreasi.", eng: "Kamal cycles to the recreational park." },
+            { context: "Lokasi Statik", s: "Buku rujukan itu", v: "tersusun", opts: ["di", "pada", "ke"], ans: "di", o: "atas rak kayu.", eng: "The reference book is arranged on the wooden shelf." },
+            { context: "Tempat / Masa Asal", s: "Bas rombongan", v: "bertolak", opts: ["daripada", "dari", "kepada"], ans: "dari", o: "Kuala Lumpur.", eng: "The tour bus departed from Kuala Lumpur." },
+            { context: "Sasaran Manusia", s: "Cikgu Adibah", v: "menyerahkan", opts: ["kepada", "pada", "untuk"], ans: "kepada", o: "ketua kelas.", eng: "Teacher Adibah handed (it) to the class monitor." },
+            { context: "Sumber Bahan", s: "Pasu antik itu", v: "diperbuat", opts: ["dari", "daripada", "oleh"], ans: "daripada", o: "tanah liat.", eng: "The antique vase is made of clay." }
         ];
+        let currP2Index = 0;
 
-        function startApp(role) {
-            const name = document.getElementById('studentName').value.trim();
-            if (role === 'student' && !name) return alert("Sila masukkan nama penuh anda!");
-            currentRole = role;
-            document.getElementById('view-landing').classList.remove('active');
-            if(role === 'teacher') {
-                document.getElementById('view-teacher').classList.add('active');
-                initTeacher();
-            } else {
-                document.getElementById('view-student').classList.add('active');
-                initMCQ(); loadLegoChallenge();
-            }
-        }
+        // --- DATA FASA 3 (Chat) ---
+        const chatScenarios = [
+            { bot: "Salam! Awak berasal **dari** negeri mana?", target: "dari" },
+            { bot: "Menarik! Hujung minggu ni awak nak berjalan **ke** mana?", target: "ke" },
+            { bot: "Seronoknya. Baju lawa ni diperbuat **daripada** kain apa?", target: "daripada" },
+            { bot: "Wah. Eh, buku ini awak nak hadiahkan **kepada** siapa?", target: "kepada" },
+            { bot: "Terima kasih! Awak mula belajar di sekolah ni **sejak** bila?", target: "sejak" }
+        ];
+        let chatStage = 0;
 
-        function initTeacher() {
-            const container = document.getElementById('teacherContainer'), p40 = document.getElementById('tp40');
-            for (let i = 2; i < 40; i++) {
-                if (document.getElementById(`tp${i}`)) continue;
-                const pg = document.createElement('div'); pg.className = 'page'; pg.id = `tp${i}`;
-                pg.innerHTML = `<h2 class="text-giant-header serif-font italic text-black">Slaid ${i}</h2><p class="text-giant-body text-black">Penerangan Mendalam KSN</p>`;
-                container.insertBefore(pg, p40);
-            }
-        }
-
-        function changeTeacherPage(delta) {
-            document.getElementById(`tp${tPage}`).classList.remove('active');
-            tPage = Math.max(1, Math.min(40, tPage + delta));
-            document.getElementById(`tp${tPage}`).classList.add('active');
-            document.getElementById('teacherIndicator').innerText = `${tPage.toString().padStart(2,'0')} / 40`;
-            if (tPage === 40) startPolling(); else stopPolling();
-        }
-
-        function jumpToMonitor() {
-            document.getElementById(`tp${tPage}`).classList.remove('active');
-            tPage = 40;
-            document.getElementById(`tp${tPage}`).classList.add('active');
-            startPolling();
-        }
-
-        function initMCQ() {
-            const container = document.getElementById('mcqContainer');
-            const shuffledQs = shuffle([...questions]);
-            container.innerHTML = shuffledQs.map((q, i) => {
-                const shuffledOptions = shuffle([...q.o]);
-                return `
-                <div class="text-center mb-10" data-correct-answer="${q.a}">
-                    <p class="text-3xl font-bold mb-6 text-black">${i+1}. ${q.q}</p>
-                    <div class="flex gap-4 justify-center" data-q-index="${i}">
-                        ${shuffledOptions.map(opt => `<button onclick="checkSelection(this, '${q.a}', 'q${i}')" class="lego-box flex-1 text-black">${opt}</button>`).join('')}
+        // --- INITIALIZE TEACHER SLIDES ---
+        function initTeacherSlides() {
+            const container = document.getElementById('teacherContainer');
+            const monitorSlide = document.getElementById('tpLast');
+            
+            let slideIndex = 2; // Mulakan dari page 2 sebab page 1 ialah Tajuk
+            
+            notaKataSendi.forEach(nota => {
+                const pg = document.createElement('div');
+                pg.className = 'page';
+                pg.id = `tp${slideIndex}`;
+                pg.setAttribute('data-obj', `Penerangan: ${nota.k}`);
+                
+                // HTML baru yang mengandungi elemen gambar
+                pg.innerHTML = `
+                    <div class="flex flex-col items-center justify-center mt-6 px-6 w-full">
+                        <h2 class="text-giant-header text-indigo-600 mb-2">${nota.k}</h2>
+                        <p class="text-giant-body mb-2">Untuk <strong>${nota.m}</strong></p>
+                        <p class="text-dual mb-8">${nota.e}</p>
+                        
+                        <div class="w-full max-w-5xl mx-auto h-[380px] rounded-[32px] overflow-hidden shadow-2xl border-4 border-white relative group bg-slate-200 flex items-center justify-center">
+                            <img src="https://picsum.photos/seed/${nota.k}IGCSE/1000/500" alt="${nota.k}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/1000x500/e2e8f0/475569?text=Visual+Tidak+Dapat+Dimuatkan'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 w-full p-8 text-white text-left">
+                                <span class="inline-block bg-indigo-500 text-white text-[10px] font-black uppercase px-3 py-1 rounded-full mb-3 shadow-md tracking-widest">📸 Visual Rujukan</span>
+                                <p class="text-lg font-medium text-slate-100 leading-snug drop-shadow-md border-l-4 border-indigo-400 pl-4">${nota.p}</p>
+                            </div>
+                        </div>
                     </div>
-                </div>`;
-            }).join('');
-        }
-
-        function checkSelection(btn, correct, id) {
-            if (answered.has(id)) return;
-            if (btn.textContent === correct) {
-                btn.classList.add('correct'); answered.add(id); p1Score++;
-                document.getElementById('mcqProgress').innerText = `Skor: ${p1Score} / 10`;
-                if (p1Score === 10) document.getElementById('btnToPhase2').classList.remove('hidden');
-            } else { btn.classList.add('wrong'); setTimeout(() => btn.classList.remove('wrong'), 800); }
-        }
-
-        function loadLegoChallenge() {
-            const c = legoChallenges[legoChallengeIndex];
-            document.getElementById('legoScenarioTitle').innerText = `Misi ${legoChallengeIndex + 1}`;
-            document.getElementById('legoPrompt').innerText = c.prompt;
-            document.getElementById('legoEnglish').innerText = c.english;
-            document.getElementById('legoSubject').innerText = c.subject;
-            document.getElementById('legoObject').innerText = c.object;
-            document.getElementById('legoVerb').innerHTML = '<option value="">(Tindakan?)</option>' + shuffle([...c.options.verbs]).map(v => `<option value="${v}">${v}</option>`).join('');
-            document.getElementById('legoKsn').innerHTML = '<option value="">(Kata Sendi?)</option>' + shuffle([...c.options.ksns]).map(k => `<option value="${k}">${k}</option>`).join('');
-            
-            // UI Reset
-            document.getElementById('resultArea').classList.add('hidden');
-            document.getElementById('stretchControls').classList.remove('hidden');
-            document.getElementById('translationArea').classList.add('hidden');
-            document.getElementById('translationInput').value = '';
-
-            // TEACHER BYPASS LOGIC FOR PHASE 2
-            if(teacherModeActive) {
-                // Auto-select correct answers
-                document.getElementById('legoVerb').value = c.correct[0][0];
-                document.getElementById('legoKsn').value = c.correct[0][1];
-                updateLego();
-            }
-        }
-
-        function updateLego() {
-            const v = document.getElementById('legoVerb').value, k = document.getElementById('legoKsn').value, c = legoChallenges[legoChallengeIndex];
-            if(v && k) {
-                document.getElementById('resultArea').classList.remove('hidden');
-                document.getElementById('finalSentence').innerText = `${c.subject} ${v} ${k} ${c.object}`;
-                const isCorrect = c.correct.some(pair => pair[0] === v && pair[1] === k);
-                if(isCorrect) {
-                    document.getElementById('legoGoalHint').innerText = "✅ Sila tekan 'KEMBANGKAN' untuk Bintang Penguasaan!";
-                    document.getElementById('btnStretch').classList.remove('opacity-50');
-                } else {
-                    document.getElementById('legoGoalHint').innerText = "⚠️ Logik ayat kurang tepat mengikut DBP. Sila betulkan.";
-                    document.getElementById('btnStretch').classList.add('opacity-50');
-                }
-            }
-        }
-
-        function stretchIt() {
-            if(document.getElementById('btnStretch').classList.contains('opacity-50')) return;
-            
-            const c = legoChallenges[legoChallengeIndex];
-            const s = document.getElementById('finalSentence');
-            
-            // Apply varied suffix
-            s.innerText = `${c.subject} ${document.getElementById('legoVerb').value} ${document.getElementById('legoKsn').value} ${c.object} ${c.stretchSuffix}`;
-            
-            // Switch to Translation Mode
-            document.getElementById('stretchControls').classList.add('hidden');
-            document.getElementById('translationArea').classList.remove('hidden');
-            
-            // TEACHER BYPASS PRE-FILL
-            if(teacherModeActive) {
-                document.getElementById('translationInput').value = c.fullEng;
-            } else {
-                document.getElementById('translationInput').focus();
-            }
-            
-            lucide.createIcons();
-        }
-
-        function checkTranslation() {
-            const userTrans = document.getElementById('translationInput').value.trim();
-            if(userTrans.length < 5) return alert("Sila masukkan terjemahan yang lengkap.");
-
-            // Store result
-            legoResults.push({
-                bm: document.getElementById('finalSentence').innerText,
-                bi: userTrans
+                `;
+                container.insertBefore(pg, monitorSlide);
+                slideIndex++;
             });
-
-            document.getElementById(`star-${legoChallengeIndex}`).classList.add('filled');
             
-            // Move Next or Finish
-            legoChallengeIndex++;
-            if(legoChallengeIndex < legoChallenges.length) {
-                loadLegoChallenge();
+            monitorSlide.id = `tp${slideIndex}`; // Update ID Live Monitor jadi yang terakhir
+            totalTeacherPages = slideIndex; // Simpan total pages
+            lucide.createIcons(); // Initialize icons
+        }
+
+        // Run initialization
+        initTeacherSlides();
+
+        // --- CORE FUNCTIONS ---
+        function startApp(role) {
+            studentName = document.getElementById('studentName').value.trim();
+            if (role === 'student' && !studentName) return alert("Bro, isi nama dulu!");
+            currentRole = role; 
+            document.getElementById('view-landing').classList.remove('active');
+            
+            if(role === 'teacher') { 
+                document.getElementById('view-teacher').classList.add('active'); 
+                changeTeacherPage(0); // Load slide 1
+            } else { 
+                document.getElementById('view-student').classList.add('active'); 
+                loadP2Question();
+            }
+        }
+
+        // --- TEACHER VIEW FUNCTIONS ---
+        function changeTeacherPage(d) {
+            document.getElementById(`tp${tPage}`).classList.remove('active');
+            tPage = Math.max(1, Math.min(totalTeacherPages, tPage + d)); 
+            document.getElementById(`tp${tPage}`).classList.add('active');
+            
+            // Format Indicator (e.g., 01 / 14)
+            const fmtT = tPage.toString().padStart(2, '0');
+            const fmtTot = totalTeacherPages.toString().padStart(2, '0');
+            document.getElementById('teacherIndicator').innerText = `${fmtT} / ${fmtTot}`;
+            
+            // Progress Bar (Teacher Mode)
+            document.getElementById('progressFill').style.width = `${(tPage / totalTeacherPages) * 100}%`;
+
+            if(tPage === totalTeacherPages) {
+                document.getElementById('currentObjective').innerText = "Live Radar Fasa 2 & 3";
+                startPolling();
             } else {
-                submitWork(); // Skip phase 3, go to phase 4
+                const objText = document.getElementById(`tp${tPage}`).getAttribute('data-obj') || "Pengenalan Topik";
+                document.getElementById('currentObjective').innerText = objText;
+                stopPolling();
+            }
+        }
+        function jumpToMonitor() { changeTeacherPage(totalTeacherPages - tPage); }
+
+        // --- STUDENT VIEW FASA 2 FUNCTIONS ---
+        function loadP2Question() {
+            if(currP2Index >= p2Data.length) {
+                goToPhase(3); // Masuk Sembang Santai
+                return;
+            }
+            
+            const q = p2Data[currP2Index];
+            document.getElementById('p2Title').innerText = `Latihan ${currP2Index + 1} / 5`;
+            document.getElementById('p2Context').innerText = `Konteks: ${q.context}`;
+            
+            document.getElementById('sSubject').innerText = q.s;
+            document.getElementById('sVerb').innerText = q.v;
+            document.getElementById('sObject').innerText = q.o;
+            
+            const sel = document.getElementById('sKsn');
+            sel.innerHTML = '<option value="">(Pilih KSN)</option>';
+            sel.classList.remove('correct');
+            sel.disabled = false;
+            
+            // Randomize options
+            let options = [...q.opts].sort(() => Math.random() - 0.5);
+            options.forEach(opt => { sel.innerHTML += `<option value="${opt}">${opt}</option>`; });
+
+            document.getElementById('stretchArea').classList.add('hidden');
+            document.getElementById('translationInput').value = '';
+        }
+
+        function validateKsn() {
+            const sel = document.getElementById('sKsn');
+            const box = document.getElementById('legoBox');
+            const val = sel.value;
+            if(!val) return;
+
+            if(val === p2Data[currP2Index].ans) {
+                // Correct
+                sel.classList.add('correct');
+                sel.disabled = true;
+                document.getElementById('stretchArea').classList.remove('hidden');
+            } else {
+                // Wrong! CFU Trigger
+                box.classList.add('shake');
+                sel.value = "";
+                setTimeout(() => box.classList.remove('shake'), 400);
             }
         }
 
-        function generateScroll() {
-            const name = document.getElementById('studentName').value;
-            document.getElementById('reportName').innerText = name;
-            
-            // New Lego Report Format (BM + BI)
-            let legoHtml = legoResults.map(r => `
-                <div class="mb-4">
-                    <p>✨ <strong>BM:</strong> ${r.bm}</p>
-                    <p class="text-sm text-slate-500 italic">🇬🇧 <strong>BI:</strong> ${r.bi}</p>
-                </div>
-            `).join('');
+        async function submitP2Question() {
+            const tr = document.getElementById('translationInput').value.trim();
+            if(tr.length < 5) {
+                document.getElementById('translationInput').classList.add('shake', 'border-red-500');
+                setTimeout(() => document.getElementById('translationInput').classList.remove('shake', 'border-red-500'), 400);
+                return;
+            }
 
-            document.getElementById('scrollContent').innerHTML = `
-                <div class="mb-6">
-                    <p class="font-bold text-[#8B6B3F] mb-4 uppercase text-xs">I. Pembina Pujangga (Mastery):</p>
-                    ${legoHtml}
-                </div>`;
-            lucide.createIcons();
+            const q = p2Data[currP2Index];
+            const fullSentence = `${q.s} ${q.ans} ${q.o}`;
+            
+            // Highlight Star
+            document.getElementById(`star-${currP2Index}`).classList.add('filled');
+            
+            // Ping to Live Monitor
+            const progressStr = `Latihan ${currP2Index + 1}/5`;
+            const payloadInfo = `Ayat: ${fullSentence} | BI: ${tr}`;
+            pingDataLive('fasa2', payloadInfo, progressStr);
+
+            currP2Index++;
+            loadP2Question();
         }
 
-        async function submitWork() {
-            generateScroll();
-            const name = document.getElementById('studentName').value;
-            
-            // Format data untuk backend: Gabungkan semua ayat BM & BI
-            const legoData = legoResults.map(r => `${r.bm} (${r.bi})`).join(' | ');
+        // --- STUDENT VIEW FASA 3 FUNCTIONS ---
+        function initChat() { 
+            document.getElementById('studentPhaseTitle').innerText = "Fasa 3: Sembang Santai";
+            document.getElementById('chatArea').innerHTML = '';
+            chatStage = 0; botReply(chatScenarios[0].bot); updateChatUI(); 
+        }
 
-            if(SCRIPT_URL) {
-                try { await fetch(SCRIPT_URL, {method:'POST', mode:'no-cors', body:JSON.stringify({nama:name, soalan1:legoData, soalan2:"Watikah"})}); } catch (e) {}
+        function updateChatUI() { 
+            const s = chatScenarios[chatStage]; if(!s) return;
+            document.getElementById('currentChatTag').innerText = s.target.toUpperCase();
+            document.getElementById('chatProgressText').innerText = `${chatStage + 1} / ${chatScenarios.length}`;
+        }
+
+        function botReply(t) {
+            const area = document.getElementById('chatArea');
+            const b = document.createElement('div'); b.className = 'chat-bubble bubble-left'; b.innerHTML = t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            area.appendChild(b); area.scrollTop = area.scrollHeight;
+        }
+
+        function handleChatInput() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim(); 
+            if(!text) return;
+            
+            const s = chatScenarios[chatStage];
+            
+            // Validate if user used the target KSN
+            if(!text.toLowerCase().includes(s.target.toLowerCase())) {
+                 alert(`Misi Gagal: Anda wajib menggunakan perkataan '${s.target.toUpperCase()}' dalam ayat! Cuba lagi.`);
+                 return;
             }
-            goToPhase(4);
+
+            const area = document.getElementById('chatArea');
+            const b = document.createElement('div'); b.className = 'chat-bubble bubble-right'; b.innerText = text;
+            area.appendChild(b); area.scrollTop = area.scrollHeight;
+            input.value = '';
+
+            // Ping Live Monitor!
+            pingDataLive('fasa3', text, `Chat ${chatStage + 1}/${chatScenarios.length}`);
+
+            chatStage++;
+            setTimeout(() => {
+                if(chatStage < chatScenarios.length) { botReply(chatScenarios[chatStage].bot); updateChatUI(); }
+                else { 
+                    botReply("Semua soalan selesai! Radar guru telah dikemaskini. 🎯"); 
+                    document.getElementById('btnFinalSubmit').classList.remove('hidden'); 
+                    document.querySelector('.bg-white.p-4.flex').style.display = 'none'; // Hide input box
+                }
+            }, 800);
         }
 
         function goToPhase(p) {
             document.querySelectorAll('.phase-container').forEach(el => el.classList.add('hidden'));
             document.getElementById(`phase${p}`).classList.remove('hidden');
-            document.getElementById('progressFill').style.width = (p/4)*100 + "%";
-            if(p === 1) document.getElementById('studentPhaseTitle').innerText = "Fasa 1: Pilihan Kata";
-            if(p === 2) document.getElementById('studentPhaseTitle').innerText = "Fasa 2: Pembina Pujangga";
-            if(p === 4) document.getElementById('studentPhaseTitle').innerText = "Fasa 3: Watikah";
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            if(p === 3) initChat();
         }
 
-        function teacherBypass() {
-            if (prompt("Masukkan Kod Pintasan:") === "4321") {
-                teacherModeActive = true;
-                
-                // PHASE 1: Reveal Answers (Fixed Logic)
-                const containers = document.querySelectorAll('[data-correct-answer]');
-                containers.forEach(container => {
-                    const correctAns = container.getAttribute('data-correct-answer');
-                    container.querySelectorAll('button').forEach(b => {
-                        if (b.textContent === correctAns) b.classList.add('correct');
-                    });
+        // --- BACKGROUND SYNCING TO GOOGLE SHEETS ---
+        async function pingDataLive(type, info, progress) {
+            try {
+                // We send it asynchronously without waiting for UI to block
+                fetch(SCRIPT_URL, { 
+                    method: 'POST', mode: 'no-cors', 
+                    body: JSON.stringify({ nama: studentName, type: type, info: info, progress: progress }) 
                 });
-                
-                p1Score = 10;
-                document.getElementById('mcqProgress').innerText = `Skor: 10 / 10`;
-                document.getElementById('btnToPhase2').classList.remove('hidden');
-
-                // If currently in Phase 2, apply auto-fill immediately
-                if(!document.getElementById('phase2').classList.contains('hidden')) {
-                    loadLegoChallenge();
-                }
-
-                alert("Mod Guru Diaktifkan: Jawapan akan dipaparkan dan diisi secara automatik.");
-            }
+            } catch(e) { console.error("Gagal ping data", e); }
         }
 
         async function fetchLiveFeed() {
-            if (!SCRIPT_URL) return;
             try {
-                const res = await fetch(SCRIPT_URL), data = await res.json();
-                document.getElementById('liveGallery').innerHTML = data.slice().reverse().map(row => `<div class="p-4 bg-white border-2 border-black shadow-[4px_4px_0px_#000] text-black"><span class="font-bold text-xs bg-black text-white px-2">${row.nama}</span><p class="text-[10px] mt-2">${row.soalan1}</p></div>`).join('');
-            } catch (e) {}
+                const res = await fetch(`${SCRIPT_URL}?t=${Date.now()}`);
+                const data = await res.json();
+                
+                const gal = document.getElementById('liveGallery');
+                gal.innerHTML = '';
+
+                if(data.length === 0) {
+                    gal.innerHTML = '<div class="text-center w-full col-span-full text-slate-400 font-bold mt-10">Belum ada respon pelajar.</div>';
+                }
+
+                data.reverse().forEach(r => {
+                    const fasa2HTML = r.fasa2 ? `<div class="mb-3"><span class="text-xs font-black text-indigo-600">LATIHAN (FASA 2):</span><p class="text-sm bg-indigo-50 p-2 rounded whitespace-pre-line mt-1">${r.fasa2}</p></div>` : '';
+                    const fasa3HTML = r.fasa3 ? `<div><span class="text-xs font-black text-green-600">SEMBANG (FASA 3):</span><p class="text-sm bg-green-50 p-2 rounded whitespace-pre-line mt-1">${r.fasa3}</p></div>` : '';
+                    
+                    gal.innerHTML += `
+                        <div class="monitor-card flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                                    <h4 class="font-black text-lg uppercase">${r.nama}</h4>
+                                    <span class="text-[10px] bg-black text-white px-2 py-1 rounded-full">${r.progress}</span>
+                                </div>
+                                ${fasa2HTML}
+                                ${fasa3HTML}
+                            </div>
+                            <div class="mt-4 text-right text-[10px] text-gray-400">Kemaskini terakhir: ${new Date(r.timestamp).toLocaleTimeString()}</div>
+                        </div>
+                    `;
+                });
+
+                document.getElementById('connectionDot').classList.replace('bg-red-500', 'bg-green-500');
+                document.getElementById('lastSync').innerText = "Dikemaskini: " + new Date().toLocaleTimeString();
+            } catch(e) { 
+                document.getElementById('connectionDot').classList.replace('bg-green-500', 'bg-red-500'); 
+            }
         }
 
-        function startPolling() { fetchLiveFeed(); pollingInterval = setInterval(fetchLiveFeed, 800); }
-        function stopPolling() { clearInterval(pollingInterval); }
+        function startPolling() { stopPolling(); fetchLiveFeed(); pollingInterval = setInterval(fetchLiveFeed, 3000); }
+        function stopPolling() { if(pollingInterval) clearInterval(pollingInterval); }
 
+        async function hardResetData() {
+            if(!confirm("Anda pasti mahu memadam SEMUA rekod radar pelajar?")) return;
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "reset" }) });
+                alert("Kelas berjaya di-reset!");
+                fetchLiveFeed();
+            } catch(e) { alert("Ralat Reset!"); }
+        }
+
+        // --- KEYBOARD & SCROLL NAVIGATION ---
         document.addEventListener('keydown', (e) => {
-            const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
-            if(currentRole === 'teacher') {
-                if(e.key === 'ArrowRight') changeTeacherPage(1);
-                if(e.key === 'ArrowLeft') changeTeacherPage(-1);
+            // Abaikan jika user tengah menaip dalam kotak input (supaya huruf 'f' tak trigger fullscreen)
+            if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea') return;
+
+            // Tekan 'F' untuk Fullscreen
+            if (e.key.toLowerCase() === 'f') {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => console.error("Fullscreen error", err));
+                } else {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                }
             }
-            if(e.key.toLowerCase() === 'f' && !isInput) {
-                if(!document.fullscreenElement) document.documentElement.requestFullscreen();
-                else document.exitFullscreen();
+
+            // Arrow Keys Navigasi (Hanya untuk Cikgu)
+            if (currentRole === 'teacher') {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeTeacherPage(1);
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeTeacherPage(-1);
             }
         });
+
+        // Mouse Wheel Scrolling (Hanya untuk Cikgu)
+        let isWheelScrolling = false;
+        window.addEventListener('wheel', (e) => {
+            if (currentRole !== 'teacher') return;
+            
+            // Benarkan native scroll kalau cikgu tengah scroll dalam Radar (live gallery)
+            if (e.target.closest('#liveGallery') || e.target.closest('.overflow-y-auto')) return;
+
+            if (isWheelScrolling) return;
+
+            if (e.deltaY > 50) {
+                changeTeacherPage(1);
+                isWheelScrolling = true;
+                setTimeout(() => isWheelScrolling = false, 600); // Debounce supaya tak laju sangat
+            } else if (e.deltaY < -50) {
+                changeTeacherPage(-1);
+                isWheelScrolling = true;
+                setTimeout(() => isWheelScrolling = false, 600); // Debounce
+            }
+        });
+
     </script>
 </body>
 </html>
