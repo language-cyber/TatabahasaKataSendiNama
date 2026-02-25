@@ -130,9 +130,19 @@
                 <h1 class="text-giant-header">Kata Sendi Nama</h1>
             </div>
 
-            <!-- Slide 2-13 (Penerangan KSN) akan di-generate oleh JavaScript di sini -->
+            <!-- Slide 2: Do Now (Aktiviti Permulaan) -->
+            <div class="page" id="tp2" data-obj="Aktiviti Permulaan (Do Now)">
+                <div class="flex flex-col items-center justify-center mt-12 px-6">
+                    <span class="text-4xl font-black text-red-500 mb-8 tracking-widest uppercase bg-red-100 px-6 py-2 rounded-full">Aktiviti Permulaan</span>
+                    <p class="text-giant-body">Bina satu ayat menggunakan <strong>SEKOLAH</strong> dan <strong>KE</strong>.</p>
+                    <p class="text-dual mt-8">Build one sentence using 'School' and 'To'.</p>
+                    <div class="mt-16 w-full max-w-5xl border-b-8 border-slate-200 py-8 text-center text-5xl text-slate-300 italic font-medium">
+                        Sila tulis pada buku nota anda.
+                    </div>
+                </div>
+            </div>
 
-            <!-- Slide Monitor -->
+            <!-- Slide Monitor (Dipindah sementara ke bawah oleh JS nanti) -->
             <div class="page" id="tpLast" data-obj="Monitor Live Feed">
                 <div class="w-full max-w-7xl h-[85vh] bg-[#f1f5f9] border-4 border-black mx-auto rounded-3xl overflow-hidden flex flex-col shadow-[12px_12px_0px_#000]">
                     <div class="bg-black p-6 flex items-center justify-between text-white">
@@ -155,7 +165,7 @@
         
         <div class="fixed bottom-10 flex gap-8 font-black text-2xl uppercase z-[101]">
             <button id="prevBtnT" onclick="changeTeacherPage(-1)">← Undur</button>
-            <span id="teacherIndicator">01 / 14</span>
+            <span id="teacherIndicator">01 / 15</span>
             <button id="nextBtnT" onclick="changeTeacherPage(1)">Maju →</button>
         </div>
     </section>
@@ -275,7 +285,7 @@
             const container = document.getElementById('teacherContainer');
             const monitorSlide = document.getElementById('tpLast');
             
-            let slideIndex = 2; // Mulakan dari page 2 sebab page 1 ialah Tajuk
+            let slideIndex = 3; // Mulakan dari page 3 sebab page 1 (Tajuk) & page 2 (Do Now)
             
             notaKataSendi.forEach(nota => {
                 const pg = document.createElement('div');
@@ -283,7 +293,7 @@
                 pg.id = `tp${slideIndex}`;
                 pg.setAttribute('data-obj', `Penerangan: ${nota.k}`);
                 
-                // HTML baru yang mengandungi elemen gambar
+                // HTML baru yang mengandungi format auto-kesan untuk local folder
                 pg.innerHTML = `
                     <div class="flex flex-col items-center justify-center mt-6 px-6 w-full">
                         <h2 class="text-giant-header text-indigo-600 mb-2">${nota.k}</h2>
@@ -291,11 +301,15 @@
                         <p class="text-dual mb-8">${nota.e}</p>
                         
                         <div class="w-full max-w-5xl mx-auto h-[380px] rounded-[32px] overflow-hidden shadow-2xl border-4 border-white relative group bg-slate-200 flex items-center justify-center">
-                            <img src="https://picsum.photos/seed/${nota.k}IGCSE/1000/500" alt="${nota.k}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/1000x500/e2e8f0/475569?text=Visual+Tidak+Dapat+Dimuatkan'">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                            <!-- Menggunakan nota.f (local file) terus -->
+                            <img src="${nota.f}" alt="${nota.k}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/1000x500/e2e8f0/475569?text=Letak+Gambar+Sini:+${nota.f}'">
+                            
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
+                            
                             <div class="absolute bottom-0 left-0 w-full p-8 text-white text-left">
-                                <span class="inline-block bg-indigo-500 text-white text-[10px] font-black uppercase px-3 py-1 rounded-full mb-3 shadow-md tracking-widest">📸 Visual Rujukan</span>
-                                <p class="text-lg font-medium text-slate-100 leading-snug drop-shadow-md border-l-4 border-indigo-400 pl-4">${nota.p}</p>
+                                <span class="inline-block bg-indigo-500 text-white text-[10px] font-black uppercase px-3 py-1 rounded-full mb-3 shadow-md tracking-widest">📸 Rujukan Visual Cikgu</span>
+                                <p class="text-sm font-bold text-slate-300 mb-1">Nama Fail: ${nota.f}</p>
+                                <p class="text-lg font-medium text-slate-100 leading-snug drop-shadow-md border-l-4 border-indigo-400 pl-4">Prompt: ${nota.p}</p>
                             </div>
                         </div>
                     </div>
@@ -334,7 +348,7 @@
             tPage = Math.max(1, Math.min(totalTeacherPages, tPage + d)); 
             document.getElementById(`tp${tPage}`).classList.add('active');
             
-            // Format Indicator (e.g., 01 / 14)
+            // Format Indicator (e.g., 01 / 15)
             const fmtT = tPage.toString().padStart(2, '0');
             const fmtTot = totalTeacherPages.toString().padStart(2, '0');
             document.getElementById('teacherIndicator').innerText = `${fmtT} / ${fmtTot}`;
@@ -346,6 +360,7 @@
                 document.getElementById('currentObjective').innerText = "Live Radar Fasa 2 & 3";
                 startPolling();
             } else {
+                // Update text kotak objektif berdasarkan attribute data-obj pada setiap slide
                 const objText = document.getElementById(`tp${tPage}`).getAttribute('data-obj') || "Pengenalan Topik";
                 document.getElementById('currentObjective').innerText = objText;
                 stopPolling();
@@ -543,7 +558,7 @@
 
         // --- KEYBOARD & SCROLL NAVIGATION ---
         document.addEventListener('keydown', (e) => {
-            // Abaikan jika user tengah menaip dalam kotak input (supaya huruf 'f' tak trigger fullscreen)
+            // Abaikan jika user tengah menaip dalam kotak input
             if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea') return;
 
             // Tekan 'F' untuk Fullscreen
@@ -575,7 +590,7 @@
             if (e.deltaY > 50) {
                 changeTeacherPage(1);
                 isWheelScrolling = true;
-                setTimeout(() => isWheelScrolling = false, 600); // Debounce supaya tak laju sangat
+                setTimeout(() => isWheelScrolling = false, 600); // Debounce
             } else if (e.deltaY < -50) {
                 changeTeacherPage(-1);
                 isWheelScrolling = true;
